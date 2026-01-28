@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Perfil - Scheduler</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="sidebar">
+    <h2 class="logo">Scheduler</h2>
+    <a href="/">📊 Dashboard</a>
+    <a href="/accounts">👥 Contas</a>
+    <a href="/profile" class="active">🙍 Perfil</a>
+    <a href="/logout">🚪 Sair</a>
+  </div>
+
+  <div class="content">
+    <h2>Meu perfil</h2>
+    <div class="profile-card glass">
+      <div class="profile-row">
+        <span class="label">Nome</span>
+        <span>{{ user[1] }}</span>
+      </div>
+      <div class="profile-row">
+        <span class="label">Email</span>
+        <span>{{ user[2] }}</span>
+      </div>
+      <div class="profile-row">
+        <span class="label">Criado em</span>
+        <span>{{ user[4] }}</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

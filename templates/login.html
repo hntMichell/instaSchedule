@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Login - Scheduler</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="auth-page">
+  <div class="auth-bg"></div>
+  <div class="auth-card glass">
+    <h2>Entrar</h2>
+    <p class="muted">Acesse sua conta para gerenciar agendamentos.</p>
+    {% if error %}
+      <div class="alert">{{ error }}</div>
+    {% endif %}
+    <form method="POST" action="/login">
+      <div class="input-group">
+        <span class="input-icon">📧</span>
+        <input type="email" name="email" placeholder=" " required>
+        <label>Email</label>
+      </div>
+      <div class="input-group">
+        <span class="input-icon">🔒</span>
+        <input type="password" name="password" placeholder=" " required>
+        <label>Senha</label>
+      </div>
+      <button type="submit">Entrar</button>
+    </form>
+    <div class="auth-footer">
+      <span>Não tem conta?</span>
+      <a href="/register">Criar agora</a>
+    </div>
+  </div>
+</body>
+</html>

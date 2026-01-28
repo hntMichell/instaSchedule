@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Cadastro - Scheduler</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="auth-page">
+  <div class="auth-bg"></div>
+  <div class="auth-card glass">
+    <h2>Criar conta</h2>
+    <p class="muted">Registre-se para gerenciar os clientes.</p>
+    {% if error %}
+      <div class="alert">{{ error }}</div>
+    {% endif %}
+    <form method="POST" action="/register">
+      <div class="input-group">
+        <span class="input-icon">👤</span>
+        <input type="text" name="name" placeholder=" " required>
+        <label>Nome</label>
+      </div>
+      <div class="input-group">
+        <span class="input-icon">📧</span>
+        <input type="email" name="email" placeholder=" " required>
+        <label>Email</label>
+      </div>
+      <div class="input-group">
+        <span class="input-icon">🔒</span>
+        <input type="password" name="password" placeholder=" " required>
+        <label>Senha</label>
+      </div>
+      <button type="submit">Criar conta</button>
+    </form>
+    <div class="auth-footer">
+      <span>Já tem conta?</span>
+      <a href="/login">Entrar</a>
+    </div>
+  </div>
+</body>
+</html>

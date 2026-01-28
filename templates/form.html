@@ -4,6 +4,16 @@
       <h3>Novo agendamento</h3>
       <form method="POST" action="/" enctype="multipart/form-data">
         <div class="input-group">
+          <span class="input-icon">👥</span>
+          <select name="account_id" required>
+            <option value="" disabled selected>Conta do cliente</option>
+            {% for account in accounts %}
+              <option value="{{ account[0] }}">{{ account[2] }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="input-group">
           <span class="input-icon">👤</span>
           <input type="text" name="client" placeholder=" " required>
           <label>Cliente</label>

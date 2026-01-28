@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Contas - Scheduler</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="sidebar">
+    <h2 class="logo">Scheduler</h2>
+    <a href="/">📊 Dashboard</a>
+    <a href="/accounts" class="active">👥 Contas</a>
+    <a href="/profile">🙍 Perfil</a>
+    <a href="/logout">🚪 Sair</a>
+  </div>
+
+  <div class="content">
+    <h2>Contas vinculadas</h2>
+
+    <div class="actions-row">
+      <a class="btn-link" href="/oauth/instagram/start">Conectar Instagram via OAuth</a>
+    </div>
+
+    <div class="cards">
+      {% for account in accounts %}
+      <div class="post-card account-card" data-id="{{ account[0] }}">
+        <h3>{{ account[2] }}</h3>
+        <p class="muted">IG User ID: {{ account[3] }}</p>
+        <button class="danger" onclick="deleteAccount(event, this)" data-id="{{ account[0] }}">Remover</button>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="form-section">
+      <div class="form-wrapper">
+        <div class="form-card glass">
+          <h3>Adicionar conta</h3>
+          {% if error %}
+            <div class="alert">{{ error }}</div>
+          {% endif %}
+          <form method="POST" action="/accounts">
+            <div class="input-group">
+              <span class="input-icon">👤</span>
+              <input type="text" name="client_name" placeholder=" " required>
+              <label>Nome do cliente</label>
+            </div>
+            <div class="input-group">
+              <span class="input-icon">🆔</span>
+              <input type="text" name="ig_user_id" placeholder=" " required>
+              <label>IG User ID</label>
+            </div>
+            <div class="input-group">
+              <span class="input-icon">🔑</span>
+              <input type="text" name="access_token" placeholder=" " required>
+              <label>Access Token</label>
+            </div>
+            <div class="input-group">
+              <span class="input-icon">⏳</span>
+              <input type="text" name="token_expires_at" placeholder=" ">
+              <label>Expira em (opcional)</label>
+            </div>
+            <button type="submit">Adicionar conta</button>
+          </form>
+          <p class="muted small">
+            Em produção, o ideal é conectar via OAuth do Facebook/Instagram.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+function deleteAccount(event, btn) {
+  event.stopPropagation()
+  const accountId = btn.dataset.id
+  fetch(`/accounts/delete/${accountId}`, { method: "POST" })
+    .then(() => location.reload())
+}
+</script>
+</body>
+</html>

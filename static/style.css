@@ -6,6 +6,59 @@ body {
     display: flex;
 }
 
+.auth-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-bg {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(800px 400px at 10% 20%, rgba(124,77,255,0.25), transparent 60%),
+        radial-gradient(600px 300px at 80% 10%, rgba(124,77,255,0.15), transparent 60%),
+        linear-gradient(180deg, #0b0b10, #0a0a14);
+    z-index: 0;
+}
+
+.auth-card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 420px;
+    padding: 32px;
+    border-radius: 22px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+
+.auth-card h2 {
+    margin: 0 0 8px;
+}
+
+.auth-footer {
+    margin-top: 16px;
+    display: flex;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.auth-footer a {
+    color: #7c4dff;
+    text-decoration: none;
+}
+
+.muted {
+    color: #aaa;
+}
+
+.small {
+    font-size: 12px;
+}
+
 .sidebar {
     width: 220px;
     background: #090914;
@@ -29,9 +82,37 @@ body {
     color: #7c4dff;
 }
 
+.divider {
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+    margin: 20px 0;
+}
+
 .content {
     flex: 1;
     padding: 30px;
+}
+
+.actions-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.btn-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: rgba(124,77,255,0.15);
+    color: #c8b8ff;
+    text-decoration: none;
+    border: 1px solid rgba(124,77,255,0.35);
+}
+
+.btn-link:hover {
+    background: rgba(124,77,255,0.25);
 }
 
 .cards {
@@ -124,6 +205,40 @@ button {
     border-radius: 10px;
     color: white;
     cursor: pointer;
+}
+
+button.danger {
+    background: #ff3b6a;
+}
+
+.alert {
+    background: rgba(255, 80, 80, 0.2);
+    border: 1px solid rgba(255, 80, 80, 0.4);
+    padding: 10px 12px;
+    border-radius: 10px;
+    margin: 10px 0 16px;
+    font-size: 14px;
+}
+
+.profile-card {
+    max-width: 520px;
+    padding: 24px;
+    border-radius: 18px;
+}
+
+.profile-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.profile-row:last-child {
+    border-bottom: none;
+}
+
+.profile-row .label {
+    color: #9aa0b4;
 }
 
 .modal {
