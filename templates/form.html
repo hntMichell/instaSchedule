@@ -1,0 +1,58 @@
+<div class="form-section">
+  <div class="form-wrapper">
+    <div class="form-card glass">
+      <h3>Novo agendamento</h3>
+      <form method="POST" action="/" enctype="multipart/form-data">
+        <div class="input-group">
+          <span class="input-icon">👤</span>
+          <input type="text" name="client" placeholder=" " required>
+          <label>Cliente</label>
+        </div>
+
+        <div class="input-group">
+          <span class="input-icon">🧩</span>
+          <select name="post_type" required>
+            <option value="" disabled selected>Tipo de post</option>
+            <option value="Feed">Feed</option>
+            <option value="Story">Story</option>
+            <option value="Reels">Reels</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <span class="input-icon">✍️</span>
+          <textarea name="caption" placeholder=" " required></textarea>
+          <label>Legenda</label>
+        </div>
+
+        <div class="dropzone" id="createDropzone">
+          <input type="file" name="image_file" id="createImageFile" class="file-input" accept="image/*">
+          <div class="dropzone-content">
+            <span class="drop-icon">🖼️</span>
+            <strong>Arraste a imagem aqui</strong>
+            <div>ou clique para escolher</div>
+          </div>
+        </div>
+
+        <div class="image-preview hidden" id="createImagePreview">
+          <button type="button" class="remove-image-btn" id="createRemoveImage">×</button>
+          <img id="createPreviewImg" alt="Prévia da imagem">
+        </div>
+
+        <div class="input-group">
+          <span class="input-icon">🔗</span>
+          <input type="url" name="image_url" placeholder=" ">
+          <label>URL da imagem (opcional)</label>
+        </div>
+
+        <div class="input-group">
+          <span class="input-icon">🕒</span>
+          <input type="datetime-local" name="scheduled_at" required>
+          <label>Agendar para</label>
+        </div>
+
+        <button type="submit">Agendar post</button>
+      </form>
+    </div>
+  </div>
+</div>

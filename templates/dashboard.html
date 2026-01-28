@@ -11,9 +11,9 @@
 <div class="sidebar">
   <h2 class="logo">Scheduler</h2>
 
-  <a onclick="openTab('geral')" class="active">📊 Geral</a>
-  <a onclick="openTab('agendar')">🚀 Agendar</a>
-  <a onclick="openTab('posts')">🗂 Agendados</a>
+  <a onclick="openTab('geral', this)" class="active">📊 Geral</a>
+  <a onclick="openTab('agendar', this)">🚀 Agendar</a>
+  <a onclick="openTab('posts', this)">🗂 Agendados</a>
 </div>
 
 <div class="content">
@@ -25,12 +25,12 @@
   <div class="cards">
     <div class="post-card">
       <h3>Total Agendados</h3>
-      <p>{{ posts|length }}</p>
+      <p>{{ counts.total }}</p>
     </div>
 
     <div class="post-card">
       <h3>Publicados</h3>
-      <p>0</p>
+      <p>{{ counts.published }}</p>
     </div>
   </div>
 </section>
@@ -70,21 +70,219 @@
 
 </div>
 
+<div id="postModal" class="modal hidden">
+  <div class="modal-content glass animate-scale">
+    <span class="close" onclick="closeModal()">×</span>
+    <h3>Detalhes do agendamento</h3>
+
+    <img id="modalImage" class="modal-image hidden" alt="Imagem do post">
+
+    <form id="editForm" enctype="multipart/form-data">
+      <input type="hidden" id="editId">
+
+      <div class="input-group">
+        <span class="input-icon">👤</span>
+        <input type="text" id="editClient" placeholder=" " required>
+        <label>Cliente</label>
+      </div>
+
+      <div class="input-group">
+        <span class="input-icon">🧩</span>
+        <select id="editPostType" required>
+          <option value="Feed">Feed</option>
+          <option value="Story">Story</option>
+          <option value="Reels">Reels</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <span class="input-icon">✍️</span>
+        <textarea id="editCaption" placeholder=" " required></textarea>
+        <label>Legenda</label>
+      </div>
+
+      <div class="input-group">
+        <span class="input-icon">🔗</span>
+        <input type="url" id="editImageUrl" placeholder=" ">
+        <label>URL da imagem (opcional)</label>
+      </div>
+
+      <div class="dropzone" id="editDropzone">
+        <input type="file" id="editImageFile" class="file-input" accept="image/*">
+        <div class="dropzone-content">
+          <span class="drop-icon">🖼️</span>
+          <strong>Arraste a imagem aqui</strong>
+          <div>ou clique para escolher</div>
+        </div>
+      </div>
+
+      <div class="image-preview hidden" id="editImagePreview">
+        <button type="button" class="remove-image-btn" id="editRemoveImage">×</button>
+        <img id="editPreviewImg" alt="Prévia da imagem">
+      </div>
+
+      <div class="input-group">
+        <span class="input-icon">🕒</span>
+        <input type="datetime-local" id="editScheduledAt" required>
+        <label>Agendar para</label>
+      </div>
+
+      <button type="submit">Salvar alterações</button>
+    </form>
+  </div>
+</div>
+
 <script>
 
 let historyStack = []
 
-function openTab(id) {
+function openTab(id, el) {
   document.querySelectorAll('.tab').forEach(t => t.classList.add('hidden'))
   document.getElementById(id).classList.remove('hidden')
+  document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'))
+  if (el) el.classList.add('active')
   historyStack.push(id)
 }
 
 function openModal(card) {
   const postId = card.dataset.id
-  console.log("Abrir modal do post:", postId)
-  // aqui depois entra o modal completo
+  fetch(`/post/${postId}`)
+    .then(r => r.json())
+    .then(post => {
+      if (post.error) return
+      clearEditImageSelection()
+      document.getElementById("editId").value = post.id
+      document.getElementById("editClient").value = post.client || ""
+      document.getElementById("editPostType").value = post.post_type || "Feed"
+      document.getElementById("editCaption").value = post.caption || ""
+      document.getElementById("editImageUrl").value = post.image_url || ""
+
+      const localValue = toLocalDatetime(post.scheduled_at)
+      document.getElementById("editScheduledAt").value = localValue
+
+      const img = document.getElementById("modalImage")
+      if (post.image_url) {
+        img.src = post.image_url
+        img.classList.remove("hidden")
+      } else {
+        img.classList.add("hidden")
+      }
+
+      document.getElementById("postModal").classList.remove("hidden")
+    })
 }
+
+function closeModal() {
+  document.getElementById("postModal").classList.add("hidden")
+}
+
+function toLocalDatetime(isoString) {
+  if (!isoString) return ""
+  const dt = new Date(isoString)
+  const pad = n => String(n).padStart(2, "0")
+  return `${dt.getFullYear()}-${pad(dt.getMonth()+1)}-${pad(dt.getDate())}T${pad(dt.getHours())}:${pad(dt.getMinutes())}`
+}
+
+document.getElementById("editForm").addEventListener("submit", (e) => {
+  e.preventDefault()
+  const postId = document.getElementById("editId").value
+  const formData = new FormData()
+  formData.append("client", document.getElementById("editClient").value)
+  formData.append("post_type", document.getElementById("editPostType").value)
+  formData.append("caption", document.getElementById("editCaption").value)
+  formData.append("image_url", document.getElementById("editImageUrl").value)
+  formData.append("scheduled_at", document.getElementById("editScheduledAt").value)
+
+  const fileInput = document.getElementById("editImageFile")
+  if (fileInput.files && fileInput.files[0]) {
+    formData.append("image_file", fileInput.files[0])
+  }
+
+  fetch(`/post/${postId}`, {
+    method: "PUT",
+    body: formData
+  }).then(() => location.reload())
+})
+
+document.getElementById("postModal").addEventListener("click", (e) => {
+  if (e.target.id === "postModal") closeModal()
+})
+
+function bindDropzone(dropzoneId, inputId, previewId, imgId, removeId, onPreview) {
+  const dropzone = document.getElementById(dropzoneId)
+  const fileInput = document.getElementById(inputId)
+  const preview = document.getElementById(previewId)
+  const img = document.getElementById(imgId)
+  const removeBtn = document.getElementById(removeId)
+
+  function showPreview(file) {
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => {
+      img.src = reader.result
+      preview.classList.remove("hidden")
+      if (onPreview) onPreview(reader.result)
+    }
+    reader.readAsDataURL(file)
+  }
+
+  function clearSelection() {
+    fileInput.value = ""
+    preview.classList.add("hidden")
+    if (onPreview) onPreview(null)
+  }
+
+  dropzone.addEventListener("click", () => fileInput.click())
+  dropzone.addEventListener("dragover", (e) => {
+    e.preventDefault()
+    dropzone.classList.add("dragover")
+  })
+  dropzone.addEventListener("dragleave", () => dropzone.classList.remove("dragover"))
+  dropzone.addEventListener("drop", (e) => {
+    e.preventDefault()
+    dropzone.classList.remove("dragover")
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      fileInput.files = e.dataTransfer.files
+      showPreview(e.dataTransfer.files[0])
+    }
+  })
+
+  fileInput.addEventListener("change", () => {
+    if (fileInput.files && fileInput.files[0]) {
+      showPreview(fileInput.files[0])
+    }
+  })
+
+  removeBtn.addEventListener("click", (e) => {
+    e.preventDefault()
+    clearSelection()
+  })
+
+  return clearSelection
+}
+
+const clearCreateImageSelection = bindDropzone(
+  "createDropzone",
+  "createImageFile",
+  "createImagePreview",
+  "createPreviewImg",
+  "createRemoveImage"
+)
+
+const clearEditImageSelection = bindDropzone(
+  "editDropzone",
+  "editImageFile",
+  "editImagePreview",
+  "editPreviewImg",
+  "editRemoveImage",
+  (src) => {
+    const img = document.getElementById("modalImage")
+    if (src) {
+      img.src = src
+      img.classList.remove("hidden")
+    }
+  }
+)
 
 function deletePost(event, btn) {
   event.stopPropagation()
@@ -96,6 +294,7 @@ function deletePost(event, btn) {
   }).then(() => location.reload())
 }
 
+openTab('geral', document.querySelector('.sidebar a.active'))
 
 </script>
 

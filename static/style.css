@@ -92,8 +92,6 @@ body {
     box-sizing: border-box;
 }
 
-
-
 .input-group input,
 .input-group textarea,
 .input-group select {
@@ -108,7 +106,6 @@ body {
     font-size: 14px;
 }
 
-
 .input-icon {
     position: absolute;
     left: 14px;
@@ -118,7 +115,6 @@ body {
     font-size: 15px;
     pointer-events: none;
 }
-
 
 button {
     width: 100%;
@@ -134,6 +130,7 @@ button {
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,.7);
+    display: flex;
     align-items: center;
     justify-content: center;
     z-index: 999;
@@ -161,7 +158,7 @@ button {
     font-size: 22px;
 }
 
-/* ===== FORMULÁRIO CENTRALIZADO ===== */
+/* ===== FORMULARIO CENTRALIZADO ===== */
 
 .form-section {
     width: 100%;
@@ -178,7 +175,7 @@ button {
 
 .form-card {
     width: 100%;
-    max-width: 520px; /* tamanho premium */
+    max-width: 520px;
     padding: 35px;
     border-radius: 25px;
     background: linear-gradient(
@@ -191,7 +188,7 @@ button {
         inset 0 0 0 1px rgba(255,255,255,0.05);
 }
 
-/* Título mais destacado */
+/* Titulo mais destacado */
 .form-card h3 {
     margin-bottom: 25px;
     font-size: 20px;
@@ -212,7 +209,7 @@ button {
     resize: none;
 }
 
-/* Botão mais forte */
+/* Botao mais forte */
 .form-card button {
     margin-top: 10px;
     height: 46px;
@@ -255,7 +252,7 @@ button {
     background: #111126;
 }
 
-/* ===== VALIDAÇÃO VISUAL ===== */
+/* ===== VALIDACAO VISUAL ===== */
 
 .input-group input:valid {
     box-shadow: 0 0 0 2px rgba(0,200,120,.4);
@@ -265,7 +262,7 @@ button {
     box-shadow: 0 0 0 2px rgba(255,80,80,.4);
 }
 
-/* ===== MICRO ANIMAÇÃO ===== */
+/* ===== MICRO ANIMACAO ===== */
 
 .input-group input,
 .input-group textarea,
@@ -329,6 +326,10 @@ button {
     color: #aaa;
 }
 
+.file-input {
+    display: none;
+}
+
 .drop-icon {
     font-size: 26px;
     display: block;
@@ -348,27 +349,22 @@ button {
   border-radius: 14px;
 }
 
-/* Botão remover */
+/* Botao remover */
 .remove-image-btn {
   position: absolute;
   top: 10px;
   right: 10px;
-
   width: 36px;
   height: 36px;
-
   border-radius: 50%;
   border: none;
-
   background: rgba(0, 0, 0, 0.6);
   color: #fff;
   font-size: 18px;
   cursor: pointer;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   backdrop-filter: blur(6px);
   transition: all 0.25s ease;
 }
@@ -376,11 +372,6 @@ button {
 .remove-image-btn:hover {
   background: rgba(255, 0, 90, 0.85);
   transform: scale(1.08);
-}
-
-/* Estados */
-.hidden {
-  display: none;
 }
 
 .card-header {
@@ -404,7 +395,6 @@ button {
   opacity: 1;
 }
 
-
 /* ===== MODAL IMAGE FIX ===== */
 
 .modal-content {
@@ -418,8 +408,8 @@ button {
 /* Imagem do modal */
 .modal-image {
     width: 100%;
-    max-height: 260px; /* 🔥 controla o tamanho */
-    object-fit: cover; /* mantém proporção sem estourar */
+    max-height: 260px;
+    object-fit: cover;
     border-radius: 14px;
     margin-bottom: 10px;
 }
