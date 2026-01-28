@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Scheduler</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="sidebar">
+  <h2 class="logo">Scheduler</h2>
+
+  <a onclick="openTab('geral')" class="active">📊 Geral</a>
+  <a onclick="openTab('agendar')">🚀 Agendar</a>
+  <a onclick="openTab('posts')">🗂 Agendados</a>
+</div>
+
+<div class="content">
+
+<!-- ===== GERAL ===== -->
+<section id="geral" class="tab">
+  <h2>Visão Geral</h2>
+
+  <div class="cards">
+    <div class="post-card">
+      <h3>Total Agendados</h3>
+      <p>{{ posts|length }}</p>
+    </div>
+
+    <div class="post-card">
+      <h3>Publicados</h3>
+      <p>0</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== AGENDAR ===== -->
+<section id="agendar" class="tab hidden">
+  {% include "form.html" %}
+</section>
+
+<!-- ===== POSTS ===== -->
+<section id="posts" class="tab hidden">
+  <div class="cards">
+    {% for post in posts %}
+    <div class="post-card"
+     data-id="{{ post[0] }}"
+     onclick="openModal(this)">
+
+      <div class="card-header">
+        <span class="badge">{{ post[2] }}</span>
+
+        {% if post[4] %}
+        <img src="{{ post[4] }}" class="card-thumb">
+        {% endif %}
+      </div>
+
+      <p>{{ post[3][:80] }}...</p>
+
+    <button onclick="deletePost(event, this)"
+        data-id="{{ post[0] }}">
+  🗑 Excluir
+</button>
+
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+</div>
+
+<script>
+
+let historyStack = []
+
+function openTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.add('hidden'))
+  document.getElementById(id).classList.remove('hidden')
+  historyStack.push(id)
+}
+
+function openModal(card) {
+  const postId = card.dataset.id
+  console.log("Abrir modal do post:", postId)
+  // aqui depois entra o modal completo
+}
+
+function deletePost(event, btn) {
+  event.stopPropagation()
+
+  const postId = btn.dataset.id
+
+  fetch(`/delete/${postId}`, {
+    method: "DELETE"
+  }).then(() => location.reload())
+}
+
+
+</script>
+
+</body>
+</html>
